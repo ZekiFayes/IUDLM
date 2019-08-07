@@ -1,7 +1,7 @@
 ## Image Understanding with Deep Learning and Mathematics (IUDLM)
 This is to understand images with deep learning approaches. As IUDLM tells, it involves Image Understanding
 (object detection, localization, recognition, segmentation, understanding), Deep Learning (CNN, RNN, RL), and Mathematics (Optimization, Statistics). 
-Our goal is to combine deep learning and object detection. We are going to dive into deep learning. For the overview of framework,
+Our goal is to combine deep learning and object detection. For the overview of framework,
 we refer to Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao. We will borrow our machine learning algorithms and Cameo architecture.
 
 #### Deep Learning
