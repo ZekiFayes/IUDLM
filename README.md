@@ -2,7 +2,7 @@
 This is to understand images with deep learning approaches. As IUDLM tells, it involves Image Understanding
 (object detection, localization, recognition, segmentation, understanding), Deep Learning (CNN, RNN, RL), and Mathematics (Optimization, Statistics). 
 Our goal is to combine deep learning and object detection. For the overview of framework,
-we refer to Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao. We will borrow our machine learning algorithms and Cameo architecture.
+we refer to [Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao](https://arxiv.org/abs/1807.05511). We will borrow our machine learning algorithms and Cameo architecture.
 
 #### Deep Learning
   1. Neural Network
@@ -54,8 +54,26 @@ class ClassName(object):
   
  
  ## Day 1
- Reference: Selective Search for Object Recognition -- J.R.R. Uijlings
+ Reference: [Selective Search for Object Recognition -- J.R.R. Uijlings](http://huppelen.nl/publications/selectiveSearchDraft.pdf)
   
  Problem: Generating possible object locations for use in object recognition
   
  Solution:  Selective Search
+ 
+ ## Day 2
+ Reference: [Efficient Graph-Based Image Segmentation -- Pedro F. Felzenszwalb](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)
+ 
+ Problem: segmenting an image into regions
+ 
+ Solution: Graph-Based Image Segmentation
+ 
+ Reference: [Rich feature hierarchies for accurate object detection and semantic segmentation -- Ross Girshick](https://www.cv-foundation.org/openaccess/content_cvpr_2014/papers/Girshick_Rich_Feature_Hierarchies_2014_CVPR_paper.pdf)
+ 
+ Framework: R-CNN: Regions with CNN features
+ 
+ Modules
+  1. Region proposals
+  2. Feature extraction
+  3. Classification
+  
+Here we are focused on Region proposals. We have built the other modules. Once we can finish the region proposals module, we can build R-CNN, and its variants.
