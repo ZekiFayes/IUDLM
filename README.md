@@ -43,6 +43,7 @@ we refer to [Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao](ht
   7. Sklearn
   8. Scipy
   9. MATLAB
+  10. C++
   
 class ClassName(object):
     
@@ -77,3 +78,6 @@ class ClassName(object):
   3. Classification
   
 Here we are focused on Region proposals. We have built the other modules. Once we can finish the region proposals module, we can build R-CNN, and its variants.
+
+## Day 3
+We refer to source code mentioned in Efficient Graph-Based Image Segmentation. We will write the prototpye using python.
