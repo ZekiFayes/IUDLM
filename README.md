@@ -81,3 +81,6 @@ Here we are focused on Region proposals. We have built the other modules. Once w
 
 ## Day 3
 We refer to source code mentioned in Efficient Graph-Based Image Segmentation. We will write the prototpye using python.
+
+## Day 4
+We build a rough prototpye using Python.
