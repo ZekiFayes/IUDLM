@@ -84,3 +84,7 @@ We refer to source code mentioned in Efficient Graph-Based Image Segmentation. W
 
 ## Day 4
 We build a rough prototpye using Python.
+
+## Day 5
+We build the prototype using object-oriented programming.
+
