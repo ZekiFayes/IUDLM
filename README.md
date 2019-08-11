@@ -87,5 +87,6 @@ We build a rough prototpye using Python.
 
 ## Day 5
 We build the prototype using object-oriented programming.
-Reference: [Lifelong Machine Learning Systems: Beyond Learning Algorithms -- Daniel L. Silver] (https://github.com/ZekiFayes/IUDLM/blob/master/Lifelong%20Machine%20Learning%20Systems%20Beyond%20Learning%20Algorithms_20180118194149.pdf)
+Reference: Lifelong Machine Learning Systems: Beyond Learning Algorithms -- Daniel L. Silver
+
 The goal is to sequentially retain learned knowledge and to selectively transfer that knowledge when learning a new task so as to develop more accurate hypotheses or policies.
