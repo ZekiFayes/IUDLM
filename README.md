@@ -90,3 +90,7 @@ We build the prototype using object-oriented programming.
 Reference: Lifelong Machine Learning Systems: Beyond Learning Algorithms -- Daniel L. Silver
 
 The goal is to sequentially retain learned knowledge and to selectively transfer that knowledge when learning a new task so as to develop more accurate hypotheses or policies.
+
+## Day 6
+We went over the Deep learning notes [cmu -- Deep learaning](http://www.cs.cmu.edu/~bhiksha/courses/deeplearning/Spring.2019/www/)
+This is to introduce Deep learning with neural network.
