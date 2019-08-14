@@ -96,3 +96,6 @@ We went over the Deep learning notes [cmu -- Deep learaning](http://www.cs.cmu.e
 This is to introduce Deep learning with neural network.
 
 [Rich feature hierarchies for accurate object detection and semantic segmentation -- Ross Girshick](http://www.rossgirshick.info/) proposes R-CNN -- Regions with CNN features.
+
+## Day 7
+Reference, Matching Networks for One Shot Learning -- Oriol Vinyals, consists of learning a class from a single labelled example.
