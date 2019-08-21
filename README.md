@@ -104,3 +104,4 @@ Reference, Matching Networks for One Shot Learning -- Oriol Vinyals, consists of
 We review Faster-RCNN and write down a summary. We focus on two Modules: Region Proposal Network (RPN) and Region of Interest (ROI) Pooling. We use keras to build a MiniVGGNet as the base network.
 
 Reference, SCARLET-NAS: Bridging the gap Between Scalability and Fairness in Neural Architecture Search -- Xiangxiang Chu, proposes an Architeture search approach to bridge the gap between Scalability and Fairness with a linearly transformation. The problem can be converted into a multi-objective optimization problem. Mathematically, we can find the optimal architecture by sovling the optimization problem.
+
