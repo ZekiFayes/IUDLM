@@ -105,3 +105,14 @@ We review Faster-RCNN and write down a summary. We focus on two Modules: Region 
 
 Reference, SCARLET-NAS: Bridging the gap Between Scalability and Fairness in Neural Architecture Search -- Xiangxiang Chu, proposes an Architeture search approach to bridge the gap between Scalability and Fairness with a linearly transformation. The problem can be converted into a multi-objective optimization problem. Mathematically, we can find the optimal architecture by sovling the optimization problem.
 
+## Day 9
+We extract the core idea from the review, [Recent Advances in Deep Learning for Object Detection -- Xiongwei Wu](https://arxiv.org/abs/1908.03673v1). Then we summarize the design guideline as a manual based on the reference and experience. We can build the computational model by constructing the blocks.
+
+Deep Learning for Computer Vision
+![](https://github.com/ZekiFayes/IUDLM/blob/master/DL4CV.png)
+
+Layered Software Design
+![](https://github.com/ZekiFayes/IUDLM/blob/master/System%20Design.png)
+
+Object Detection Framework
+![](https://github.com/ZekiFayes/IUDLM/blob/master/Object%20Detection.png)
