@@ -12,7 +12,7 @@ classLabels = ["cat", "dog", "unknown"]
 print("[INF0] sampling images ... ")
 imagePaths = np.array(list(paths.list_images("dataset_model_fig/dataset/test1")))
 
-idxs = np.random.randint(0, len(imagePaths), size=(1, ))
+idxs = np.random.randint(0, len(imagePaths), size=(10, ))
 imagePaths = imagePaths[idxs]
 
 p = Preprocessor(32, 32)
@@ -22,7 +22,7 @@ data, labels = dl.load(imagePaths)
 data = data.astype("float") / 255.0
 
 print("[INF0] loading pre-trained model ... ")
-model = load_model("dataset_model_fig/model/minivggnet.hdf5")
+model = load_model("dataset_model_fig/model/lenet.hdf5")
 
 print("[INF0] predicting ... ")
 preds = model.predict(data, batch_size=32).argmax(axis=1)

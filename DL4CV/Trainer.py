@@ -5,9 +5,12 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 import pickle
 from sklearn.metrics import classification_report
+from keras.optimizers import RMSprop
 from keras.optimizers import SGD
 import numpy as np
 import matplotlib.pyplot as plt
+from keras.preprocessing.image import ImageDataGenerator
+from iudlm.model.alexnet import AlexNet
 
 
 class IUDLM(object):
@@ -22,7 +25,7 @@ class IUDLM(object):
         self._trainy = None
         self._testy = None
         self._h = None
-        self._epoch = 5
+        self._epoch = 1
 
     def loaddata(self):
 
@@ -41,13 +44,26 @@ class IUDLM(object):
 
     def train(self):
 
+        # data augmentation
+        aug = ImageDataGenerator(rotation_range=30, width_shift_range=0.1,
+                                 height_shift_range=0.1, shear_range=0.2,
+                                 zoom_range=0.2, horizontal_flip=True,
+                                 fill_mode="nearest")
+
         print("[INF0] training model ... ")
-        opt = SGD(lr=0.01, decay=0.01 / 40, momentum=0.9, nesterov=True)
+
+        # opt = SGD(lr=0.01, decay=0.01 / 40, momentum=0.9, nesterov=True)
+        opt = RMSprop(lr=0.001)
         self._model.compile(loss="categorical_crossentropy",
                             optimizer=opt, metrics=["accuracy"])
-        self._h = self._model.fit(self._trainx, self._trainy,
-                                  validation_data=(self._testx, self._testy),
-                                  epochs=self._epoch, batch_size=128, verbose=1)
+        # self._h = self._model.fit(self._trainx, self._trainy,
+        #                           validation_data=(self._testx, self._testy),
+        #                           epochs=self._epoch, batch_size=128, verbose=1)
+
+        self._h = self._model.fit_generator(aug.flow(self._trainx, self._trainy, batch_size=32),
+                                            validation_data=(self._testx, self._testy),
+                                            steps_per_epoch=len(self._trainx) // 32,
+                                            epochs=self._epoch, verbose=1)
 
         print("[INF0] serializing model ... ")
         self._model.save("dataset_model_fig/model/" + self._name + ".hdf5")
@@ -86,12 +102,16 @@ class IUDLM(object):
 
 if __name__ == "__main__":
 
-    m1 = ShallowNet.build(32, 32, 3, 3)
+    # m1 = ShallowNet.build(32, 32, 3, 3)
     m2 = LeNet.build(32, 32, 3, 3)
-    m3 = MiniVGGNet.build(32, 32, 3, 3)
-    M = [m1, m2, m3]
-    names = ["cnn", "lenet", "minivggnet"]
+    # m3 = MiniVGGNet.build(32, 32, 3, 3)
+    # M = [m1, m2, m3]
+    # names = ["cnn", "lenet", "minivggnet"]
+    M = [m2]
+    names = ["lenet"]
 
     for m, n in zip(M, names):
         iudlm = IUDLM(m, n)
         iudlm.run()
+
+
