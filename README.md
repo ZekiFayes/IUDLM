@@ -1,8 +1,40 @@
 ## Image Understanding with Deep Learning and Mathematics (IUDLM)
 This is to understand images with deep learning approaches. As IUDLM tells, it involves Image Understanding
-(object detection, localization, recognition, segmentation, understanding), Deep Learning (CNN, RNN, RL), and Mathematics (Optimization, Statistics). 
+(object detection, localization, recognition, segmentation, understanding), Deep Learning (CNN, RNN, RL), and Mathematics (Optimization, Statistics).
+
 Our goal is to combine deep learning and object detection. For the overview of framework,
-we refer to [Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao](https://arxiv.org/abs/1807.05511). We will borrow our machine learning algorithms and Cameo architecture.
+we refer to [Object Detection with Deep Learning: A Review -- Zhong-Qiu Zhao](https://arxiv.org/abs/1807.05511). We will borrow our machine learning algorithms and Cameo architecture. 
+
+We extract the core idea from the review, [Recent Advances in Deep Learning for Object Detection -- Xiongwei Wu](https://arxiv.org/abs/1908.03673v1). Then we summarize the design guideline as a manual based on the reference and experience. We can build the computational model by constructing the blocks.
+
+### Deep Learning for Computer Vision
+![](https://github.com/ZekiFayes/IUDLM/blob/master/DL4CV.png)
+
+### Layered Software Design
+![](https://github.com/ZekiFayes/IUDLM/blob/master/System%20Design.png)
+
+### Object Detection Framework
+![](https://github.com/ZekiFayes/IUDLM/blob/master/Object%20Detection.png)
+
+The whole system is listed in the folder [DL4CV](https://github.com/ZekiFayes/IUDLM/tree/master/DL4CV). It consists of
+  1. Deep Learning (keras/tensorflow)
+    
+    1.1 iudlm -> dataloader
+    1.2 iudlm -> IO
+    1.3 iudlm -> model
+    1.4 iudlm -> preprocessor
+    1.5 iudlm -> utils
+    
+  2. Computer Vision (OpenCV)
+  
+    2.1 videoanalysis -> CaptureManager
+    2.2 videoanalysis -> WindowManager
+    2.3 ...
+    
+  3. Real-Time Application
+  
+    3.1 Cameo
+    3.2 ...
 
 #### Deep Learning
   1. Neural Network
@@ -106,13 +138,4 @@ We review Faster-RCNN and write down a summary. We focus on two Modules: Region 
 Reference, SCARLET-NAS: Bridging the gap Between Scalability and Fairness in Neural Architecture Search -- Xiangxiang Chu, proposes an Architeture search approach to bridge the gap between Scalability and Fairness with a linearly transformation. The problem can be converted into a multi-objective optimization problem. Mathematically, we can find the optimal architecture by sovling the optimization problem.
 
 ## Day 9
-We extract the core idea from the review, [Recent Advances in Deep Learning for Object Detection -- Xiongwei Wu](https://arxiv.org/abs/1908.03673v1). Then we summarize the design guideline as a manual based on the reference and experience. We can build the computational model by constructing the blocks.
-
-Deep Learning for Computer Vision
-![](https://github.com/ZekiFayes/IUDLM/blob/master/DL4CV.png)
-
-Layered Software Design
-![](https://github.com/ZekiFayes/IUDLM/blob/master/System%20Design.png)
-
-Object Detection Framework
-![](https://github.com/ZekiFayes/IUDLM/blob/master/Object%20Detection.png)
+We extract the core idea from the review, [Recent Advances in Deep Learning for Object Detection -- Xiongwei Wu](https://arxiv.org/abs/1908.03673v1). Then we summarize the design guideline as a manual based on the reference and experience. We can build the computational model by constructing the blocks. Deep Learning for Computer Vision, Layered Software Design, Object Detection Framework.
