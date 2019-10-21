@@ -14,19 +14,23 @@ class Image(object):
 
     def loadImage(self, name):
 
+        """ load the image """
         return cv2.imread(name)
 
-    def binarizeImage(self, image):
+    def binarizeImage(self, src):
 
-        _, thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        """ binarize the image """
+        _, thresh = cv2.threshold(src, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         return thresh
 
     def getImageShape(self, src):
 
+        """ get the shape of the image [height, width] """
         return src.shape[:2]
 
     def getOuterEdegPoints(self, src):
 
+        """ get the edge pints by scanning the edge """
         pts = []
         h, w = self.getImageShape(src)
         for i in range(w):
@@ -38,6 +42,7 @@ class Image(object):
 
     def getInnerEdgePoints(self, src):
 
+        """ get the edge points by scanning the edge """
         pts = []
         h, w = self.getImageShape(src)
         mid = w // 2
@@ -59,6 +64,7 @@ class Image(object):
 
     def getCenterandRadius(self, pts):
 
+        """ calculate the center and radius using least square fitting """
         sum_x = 0.0
         sum_y = 0.0
         sum_x2 = 0.0
@@ -101,16 +107,23 @@ class Image(object):
 
     def getAngleRange(self, pts, center, radius):
 
+        """ get the angle range of an arc """
         pts_sorted = sorted(pts)
         pt1 = pts_sorted[0]
         pt2 = pts_sorted[-1]
+
+        print("[INF0] left point = ", pt1)
+        print("[INF0] right point = ", pt2)
+
+        """ this is to calculate the angle and it depends on the point """
         rightAngle = math.atan2((pt1[1] - center[1]), (pt1[0] - center[0]))
-        leftAngle = math.atan2((pt2[1] - center[1]), (pt2[0] - center[0]))
+        leftAngle  = math.atan2((pt2[1] - center[1]), (pt2[0] - center[0]))
 
         return -leftAngle, -rightAngle
 
     def cart2polar(self, src, center, radius):
 
+        """ transform x-y into rho-theta """
         h = int(np.ceil(radius))
         w = int(np.ceil(h * 2 * np.pi))
         dst = np.zeros((h, w), np.uint8)
@@ -137,6 +150,7 @@ class Image(object):
 
     def cart2polar(self, src, center, rLower, rUpper):
 
+        """ transform x-y into rho-theta """
         h = int(np.ceil(rUpper - rLower))
         w = int(np.ceil(rUpper * 2 * np.pi))
         dst = np.zeros((h, w), np.uint8)
@@ -163,6 +177,7 @@ class Image(object):
 
     def cart2polar(self, src, center, rMin, rMax, theta1, theta2):
 
+        """ transform x-y into rho-theta """
         h = int(np.ceil(rMax - rMin))
         w = int(np.ceil(rMax * (theta2 - theta1)))
         dst = np.zeros((h, w), np.uint8)
@@ -189,6 +204,7 @@ class Image(object):
 
     def polar2cart(self, point, center, radius):
 
+        """ transform rho-theta to x-y """
         x = center[0] + point[1] * np.cos(point[0] / radius)
         y = center[1] + point[1] * np.sin(point[0] / radius)
 
@@ -196,6 +212,7 @@ class Image(object):
 
     def shiftImage(self, src, theta_offset):
 
+        """ shift the image by theta """
         height, width = src.shape[:2]
         t_offset = theta_offset * width // 360
         dst = 0 * src
@@ -210,31 +227,56 @@ class Image(object):
 
     def showImage(self, name, src):
 
+        """ show the image """
         resized = cv2.resize(src, None, fx=0.25, fy=0.25, interpolation=cv2.INTER_LINEAR)
         cv2.imshow(name, resized)
         cv2.waitKey(0)
 
+    def plotImage(self, num_figure, name, src):
+
+        plt.figure(num_figure)
+        plt.imshow(src, cmap='gray')
+        plt.title(name)
+        plt.draw()
+        plt.pause(0.01)
+
     def findContours(self, src):
 
+        """ find the contours of an image """
         contours, hierarchy = cv2.findContours(src, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         return contours
 
     def findBoundingBoxes(self, contours):
 
+        """ find the boxes that fit every contour """
         if contours is None:
             return []
 
         rect_boxes = []
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
-            # if 20 < w < 80 and 30 < h < 70:
+
+            """ constrain the boxes into a relatively small range """
             if 10 < w < 1000:
                 rect_boxes.append((x, y, w, h))
 
         return rect_boxes
 
+    def removeSmallConnectedArea(self, boxes):
+
+        if boxes is None:
+            print("there is no box!")
+            return []
+        else:
+            boxes_new = []
+            for (x, y, w, h) in boxes:
+                if 20 < w < 190 and 20 < h < 130:
+                    boxes_new.append((x, y, w, h))
+            return boxes_new
+
     def plotString(self, src, boxes):
 
+        """ plot the contents involved in the box areas """
         if boxes is None:
             print("there is no box!")
             return
@@ -246,39 +288,86 @@ class Image(object):
             cv2.waitKey(0)
             i += 1
 
+    def boundaryChecking(self, boxes):
+
+        box1, boxn = boxes[0], boxes[-1]
+
+        if box1[0] > 20 and boxn[0] + boxn[3] + 20 < 1950:
+            return boxes
+        else:
+            return []
+
     def detectString(self, boxes):
 
+        """
+        traverse every boxes to located the strings and classify the boxes
+        this function needs to be optimized
+        """
         if boxes is None:
             print("there is no box!")
             return 0, [], []
 
-        box1 = []
-        box2 = []
+        # box1 = []
+        # box2 = []
 
         if not len(boxes):
             print("there is no box!")
             return 0, [], []
+
         elif len(boxes) == 1:
-            return 1, boxes, []
-        else:
-            boxes = np.array(boxes)
-            mean = np.mean(boxes, 0)
-            print("mean = ", mean)
-            std = np.std(boxes, 0, ddof=1)
-            print("std = ", std)
-
-            if std[0] > 500:
-                for (x, y, w, h) in boxes:
-                    if x < mean[0]:
-                        box1.append((x, y, w, h))
-                    else:
-                        box2.append((x, y, w, h))
-
-                print("2 classes")
-                return 2, box1, box2
-            else:
-                print("1 class")
+            if boxes[0][0] > 20 and boxes[0][0] + boxes[0][3] + 20 < 1950:
                 return 1, boxes, []
+            else:
+                return 0, [], []
+
+        elif len(boxes) >= 4:
+
+            boxes = np.array(boxes)
+            # mean = np.mean(boxes, 0)
+            # print("[INF0] mean = ", mean)
+            std = np.std(boxes, 0, ddof=1)
+            print("[INF0] std = ", std)
+
+            if len(boxes) == 4:
+                if std[0] > 500:
+                    # for (x, y, w, h) in boxes:
+                    #
+                    #     if x < mean[0]:
+                    #         box1.append((x, y, w, h))
+                    #     else:
+                    #         box2.append((x, y, w, h))
+                    #
+                    # print("[INF0] 2 classes")
+                    # return 2, box1, box2
+
+                    return 0, [], []
+                else:
+                    if self.boundaryChecking(boxes) is not None:
+                        return 1, boxes, []
+                    else:
+                        return 0, [], []
+
+            elif len(boxes) == 10:
+                if std[0] > 500:
+                    # for (x, y, w, h) in boxes:
+                    #
+                    #     if x < mean[0]:
+                    #         box1.append((x, y, w, h))
+                    #     else:
+                    #         box2.append((x, y, w, h))
+                    #
+                    # print("[INF0] 2 classes")
+                    # return 2, box1, box2
+                    return 0, [], []
+                else:
+                    if self.boundaryChecking(boxes) is not None:
+                        return 1, boxes, []
+                    else:
+                        return 0, [], []
+            else:
+                return 0, [], []
+        else:
+            return 0, [], []
 
     def processImage(self, src, ith_image):
 
@@ -290,26 +379,31 @@ class Image(object):
         print("[INF0] fitting circle ... ")
         pts = self.getOuterEdegPoints(binarized_images)
         center, rMax = self.getCenterandRadius(pts)
+        print("[INF0] center = ", center)
+        print("[INF0] outer radius = ", rMax)
 
         print("[INF0] calculating angle range ... ")
         theta_min, theta_max = self.getAngleRange(pts, center, rMax)
-        print("theta_min = ", theta_min)
-        print("theta_max = ", theta_max)
+        print("[INF0] theta_min = ", theta_min)
+        print("[INF0] theta_max = ", theta_max)
 
         pts = self.getInnerEdgePoints(binarized_images)
         center1, rMin = self.getCenterandRadius(pts)
+        print("[INF0] center = ", center1)
+        print("[INF0] inner radius = ", rMin)
 
         print("[INF0] transforming image ... ")
-        cart_image = self.cart2polar(img, center, rMin, rMax, theta_min, theta_max)
+        cart_image = self.cart2polar(img, center, rMin, rMax, theta_min+0.03, theta_max-0.03)
         # self.showImage("cart_image", cart_image)
+        print(cart_image.shape)
 
         mean = np.mean(cart_image)
 
         print("[INF0] thresholding image ... ")
         _, thresh = cv2.threshold(cart_image, int(mean), 255, cv2.THRESH_BINARY_INV)
         roi = thresh[0:140]
-        self.showImage("roi", roi)
-
+        # self.showImage("roi", roi)
+        self.plotImage(1, "original image", roi)
         print("[INF0] finding contours ... ")
         contours = self.findContours(roi)
 
@@ -317,15 +411,22 @@ class Image(object):
             print("[INF0] finding boxes ... ")
             boxes = self.findBoundingBoxes(contours)
 
+            print("[INFO] removing small connected components ... ")
+            boxes = self.removeSmallConnectedArea(boxes)
+            print(boxes)
+
+            print("[INF0] sorting boxes ... ")
+            sorted_boxes = sorted(boxes)
+            print(sorted_boxes)
+
             print("[INF0] classifying boxes ... ")
-            num_classes, box1, box2 = self.detectString(boxes)
+            num_classes, box1, box2 = self.detectString(sorted_boxes)
 
             if num_classes == 1:
-                self.plotString(roi, box1)
+                # self.plotString(roi, box1)
                 xywh = np.array(box1)
                 mean = np.mean(xywh, 0)
                 num = int((85 + (mean[0] + mean[2] / 2) / ((theta_max - theta_min) * rMax) * 180 / np.pi) / 2)
-                print(num)
 
                 if ith_image + num > 178:
                     num = ith_image + num - 178
@@ -335,9 +436,8 @@ class Image(object):
                 return num
 
             elif num_classes == 2:
-                self.plotString(roi, box1)
-                self.plotString(roi, box2)
-
+                # self.plotString(roi, box1)
+                # self.plotString(roi, box2)
                 return -1
             else:
                 return -1
@@ -346,20 +446,76 @@ class Image(object):
 
         with open("data/data.pkl", "rb") as fin:
             data = pickle.load(fin)
+        #
+        # ith_image = np.random.randint(0, 177)
+        # print("[INF0] {}/{} is selected".format(ith_image, len(data)-1))
+        #
+        # img = data[0]
+        # self.showImage("image", img)
+        #
+        # num = self.processImage(img, 0)
+        # if num is not -1:
+        #     print("[INF0] pick ", num, "th image ")
+        #     img = data[num]
+        #     self.showImage("img", img)
+        #     num = self.processImage(img, num)
 
-        ith_image = np.random.randint(0, 177)
-        print("ith_image =", ith_image)
-        img = data[ith_image]
-        self.showImage("image", img)
-        num = self.processImage(img, ith_image)
+        pair = []
+        """ batch test """
+        for (i, img) in enumerate(data):
+            print("[INF0] {}/{} is selected".format(i+1, len(data)))
+            # self.plotImage(1, "original image", img)
+            # self.showImage("image", img)
+            num = self.processImage(img, i)
+            if num is not -1:
+                # pair.append((i, num))
+                # print("[INF0] pick ", num, "th image ")
+                plt.figure(2)
 
-        if num is not -1:
-            print("pick ", num, "th image ")
-            img = data[num]
-            self.showImage("img", img)
+                plt.subplot(2, 3, 1)
+                plt.imshow(data[num], cmap='gray')
+
+                num += 30
+                if num >= 178:
+                    num = num - 178
+
+                plt.subplot(2, 3, 2)
+                plt.imshow(data[num], cmap='gray')
+
+                num += 30
+                if num >= 178:
+                    num = num - 178
+
+                plt.subplot(2, 3, 3)
+                plt.imshow(data[num], cmap='gray')
+
+                num += 30
+                if num >= 178:
+                    num = num - 178
+
+                plt.subplot(2, 3, 4)
+                plt.imshow(data[num], cmap='gray')
+
+                num += 30
+                if num >= 178:
+                    num = num - 178
+
+                plt.subplot(2, 3, 5)
+                plt.imshow(data[num], cmap='gray')
+
+                num += 30
+                if num >= 178:
+                    num = num - 178
+
+                plt.subplot(2, 3, 6)
+                plt.imshow(data[num], cmap='gray')
+
+                plt.draw()
+                plt.pause(0.01)
+                # self.showImage("img", data[num])
+        print(pair)
 
 
 if __name__ == "__main__":
     im = Image()
     im.run()
-    
